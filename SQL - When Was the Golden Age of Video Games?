@@ -1,0 +1,74 @@
+%%sql
+postgresql:///games
+
+-- Select all information for the top ten best-selling games
+-- Order the results from best-selling game down to tenth best-selling
+
+SELECT * 
+FROM game_sales
+ORDER BY games_sold DESC
+LIMIT 10;
+
+    
+-- Find the number of rows where there are no reviews at all
+
+SELECT COUNT(g.game)
+FROM game_sales g
+LEFT JOIN reviews r
+ON g.game = r.game
+WHERE critic_score IS NULL AND user_score IS NULL;
+
+
+-- Find the "best years" for games according to the critics
+
+SELECT g.year, ROUND(AVG(r.critic_score),2) AS avg_critic_score
+FROM game_sales g
+INNER JOIN reviews r
+ON g.game = r.game
+GROUP BY g.year
+ORDER BY avg_critic_score DESC
+LIMIT 10;
+
+
+-- Look closer at the number of games with a high critics' score per year - the results for 1982, are suspiciously "round" for averages
+
+SELECT g.year, COUNT(g.game) AS num_games, ROUND(AVG(r.critic_score),2) AS avg_critic_score
+FROM game_sales g
+INNER JOIN reviews r
+ON g.game = r.game
+GROUP BY g.year
+HAVING COUNT(g.game) > 4
+ORDER BY avg_critic_score DESC
+LIMIT 10;
+
+
+-- Select year, an average of user_score, and a count of games released in a given year, aliased and rounded
+-- Include only years with more than four reviewed games; group data by year
+-- Order data by avg_user_score, and limit to ten results
+
+SELECT g.year, 
+    ROUND(AVG(r.user_score), 2) AS avg_user_score,
+    COUNT(g.game) AS num_games
+FROM game_sales AS g
+INNER JOIN reviews AS r
+ON g.game = r.game
+GROUP BY g.year
+HAVING COUNT(g.game) > 4
+ORDER BY avg_user_score DESC
+LIMIT 10;
+
+
+-- Select year and sum of games_sold, aliased as total_games_sold; order results by total_games_sold descending
+-- Filter game_sales based on whether each year is in the list returned in the previous task
+
+
+SELECT year, 
+    SUM(games_sold) AS total_games_sold
+FROM game_sales
+WHERE year IN (SELECT year
+    FROM top_critic_years_more_than_four_games
+    INTERSECT 
+    SELECT year
+    FROM top_user_years_more_than_four_games)
+GROUP BY year
+ORDER BY total_games_sold DESC;
