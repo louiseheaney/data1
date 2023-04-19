@@ -12,3 +12,8 @@ Python
 - Assess data quality and perform validation tasks
 - Calculate metrics to effectively report characteristics of data and relationships between features
 - Create and analyze data visualizations to represent the relationships between features
+
+Tableau
+- Please visit my Tableau Public page for data visualisation and dashboard designs:
+
+https://public.tableau.com/app/profile/louise.heaney
