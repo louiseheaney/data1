@@ -1,4 +1,4 @@
-My portfoio of SQL queries showcasing my ability to:
+My portfolio of SQL queries showcasing my ability to:
 
 - Perform data extraction, joining and aggregation tasks
 - Perform cleaning tasks to prepare data for analysis
